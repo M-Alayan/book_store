@@ -1,0 +1,65 @@
+﻿@model VMuser
+
+<form method="post">
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Name </label>
+                <input type="text" asp-for="signup.Name" class="form-control" />
+                <span asp-validation-for="signup.Name"> </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Username</label>
+                <input type="text" asp-for="signup.Username" class="form-control" />
+                <span asp-validation-for="signup.Username"> </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Email</label>
+                <input type="text" asp-for="signup.Email" class="form-control" />
+                <span asp-validation-for="signup.Email"> </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Password</label>
+                <input type="password" asp-for="signup.Password" class="form-control" />
+                <span asp-validation-for="signup.Password"> </span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="control-label">Role</label>
+                <select class="form-control" asp-for="signup.Role_Id" asp-items='new SelectList(Model.lirole,"Id","Name")'>
+                </select>
+                <span asp-validation-for="signup.Role_Id"> </span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="submit" value="Create Account" asp-action="SignUp" class="btn btn-default" />
+        </div>
+
+    </div>
+
+</form>

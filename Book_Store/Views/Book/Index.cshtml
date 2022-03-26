@@ -1,0 +1,155 @@
+﻿@model VMbook
+
+<h1>Books Section</h1>
+
+<div class="row Boxmargin">
+    <div class="col-sm-12  ">
+        <input type="button" class="btn btn-primary" value="new book"
+               data-target="#bookmodel" data-toggle="modal" id="newbook" onclick="hide(id);"/>
+
+    </div>
+</div>
+
+<div class="modal fade" id="bookmodel" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Book</h4>
+
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Book Title</label>
+                        <input type="text" class="form-control" asp-for="book.Title" placeholder="Enter Book Title" />
+                        <span asp-validation-for="book.Title"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Year</label>
+                        <input type="text" class="form-control" asp-for="book.Year" placeholder="Year of publication" />
+                        <span asp-validation-for="book.Year"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="text" class="form-control" asp-for="book.Price" placeholder="Enter Price " />
+                        <span asp-validation-for="book.Price"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Category List</label>
+                        <select class="form-control" asp-for="book.category_id" asp-items='new SelectList(Model.licategory,"Id","Name")'></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Author List</label>
+                        <select class="form-control" asp-for="book.author_id" asp-items='new SelectList(Model.liauthor,"Id","FirstName")'></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="f1" class="btn btn-primary">Cover photo</label>
+                        <input type="file"  id="f1" style="display:none" asp-for="book.Image" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="text" class="form-control" asp-for="book.Stock" placeholder="Enter number of book in stock " />
+                   <span asp-validation-for="book.Stock"></span>
+                    </div>
+                    <input type="hidden" asp-for="book.Id" />
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Save" asp-action="addbook" class="btn btn-primary" id="save">
+                    <input type="submit" value="Update" id="update" asp-action="updatebook" class="btn btn-primary">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="close">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px">
+    <div class="col-sm-12">
+        <table class="table table-bordered">
+            <thead>
+            <th>#</th>
+            <th>Book Title</th>
+            <th>Cover</th>
+            <th>Year</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Author</th>
+            <th>Stock</th>
+            <th>Action</th>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.libook)
+                {
+                <tr>
+                    <td class="bookid">@item.Id</td>
+                    <td>@item.Title</td>
+                    <td><img src="@item.Path" style="width:50px; height:50px" /></td>
+                    <td>@item.Year</td>
+                    <td>@item.Price</td>
+                    <td>@item.category.Name</td>
+                    <td>@item.author.FirstName</td>
+                    <td>@item.Stock</td>
+                    
+
+
+                    <td>
+        
+                        <a class="glyphicon glyphicon-edit edit3" style="text-decoration:none" id="pop" onclick="hide(id)">
+                            &nbsp
+                        </a>
+       
+                        <a class="glyphicon glyphicon-trash" style="color:red;text-decoration:none" asp-action="delete" asp-route-ID="@item.Id">&nbsp</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".edit3").click(function () {
+            debugger;
+            var cat_id = $(this).parent().parent().find(".bookid").text()
+            $.ajax({
+                type: 'get',
+                url: '/bookstore/Book/edit?id=' + cat_id,
+                success: function (data) {
+                    debugger;
+                    $("#book_Title").val(data.title)
+                    $("#book_Year").val(data.year)
+                    $("#book_Price").val(data.price)
+                    $("#book_category_id").val(data.category_id)
+                    $("#book_author_id").val(data.author_id)
+                    $("#book_Stock").val(data.stock)
+                    alert("done");
+                },
+                error: function () {
+                    alert("error")
+                }
+            })
+            $("#bookmodel").modal('show')
+        });
+    });
+    function hide(id) {
+        debugger
+        if (id == "pop") {
+            $("#save").hide();
+            $("#update").show();
+        }
+        else if (id == "newbook") {
+            $("#update").hide();
+            $("#save").show();
+            $("#book_Title").val("")
+            $("#book_Year").val("")
+            $("#book_Price").val("")
+            $("#book_category_id").val("")
+            $("#book_author_id").val("")
+            $("#book_Stock").val("")
+        }
+
+    }
+
+</script>

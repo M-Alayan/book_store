@@ -1,0 +1,129 @@
+﻿@model VMauthor
+
+<h1>Authors Section</h1>
+
+<div class="row Boxmargin">
+    <div class="col-sm-12  ">
+        <input type="button" class="btn btn-primary" value="new author"
+               data-target="#authormodel" data-toggle="modal" id="newauthor" onclick="hide(id);" />
+
+    </div>
+</div>
+
+<div class="modal fade" id="authormodel" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Author</h4>
+
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" asp-for="author.FirstName" placeholder="Enter First Name" />
+                        <span asp-validation-for="author.FirstName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" asp-for="author.LastName" placeholder="Enter Last Name" />
+                        <span asp-validation-for="author.LastName"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" class="form-control" asp-for="author.Phone" placeholder="Enter Phone Number" />
+                        <span asp-validation-for="author.Phone"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Nationality List</label>
+                        <select class="form-control" asp-for="author.nationality_id" asp-items='new SelectList(Model.linationality,"Id","Name")'></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="f2" class="btn btn-primary" >Author photo</label>
+                        <input type="file" id="f2" style="display:none" asp-for="author.Image"/>
+                    </div>
+                    <input type="hidden" asp-for="author.Id" />
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" id="save1" value="Save" asp-action="addauthor" class="btn btn-primary">
+                    <input type="submit" id="update1" value="Update" asp-action="updateauthor" class="btn btn-primary">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="close">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px">
+    <div class="col-sm-12">
+        <table class="table table-bordered">
+            <thead>
+            <th>#</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Action</th>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.liauthor)
+                {
+                    <tr>
+                        <td class="authorid">@item.Id</td>
+                        <td>@item.FirstName</td>
+                        <td><img src="@item.Path" style="width:50px; height:50px" /></td>
+                        <td>
+                           
+                            <a class="glyphicon glyphicon-edit edit"  style="text-decoration:none" id="pop1" onclick="hide(id);">
+                                &nbsp
+                            </a>
+               
+                            <a class="glyphicon glyphicon-trash" style="color:red;text-decoration:none" asp-action="delete" asp-route-ID="@item.Id">&nbsp</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".edit").click(function () {
+            debugger;
+            var aut_id=$(this).parent().parent().find(".authorid").text()
+            $.ajax({
+                type: 'get',
+                url: '/bookstore/Author/edit?id='+aut_id,
+                success: function (data) {
+                    debugger;
+                    $("#author_FirstName").val(data.firstName)
+                    $("#author_LastName").val(data.lastName)
+                    $("#author_Phone").val(data.phone)
+                    $("#author_nationality_id").val(data.nationality_id)
+                    $("#author_Id").val(data.id)
+                    alert("done");
+                },
+                error: function () {
+                    alert("error")
+                }
+            })
+            $("#authormodel").modal('show')
+        });
+    });
+    function hide(id) {
+        debugger
+        if (id == "newauthor") {
+            $("#save1").show();
+            $("#update1").hide();
+        }
+        else if (id == "pop1") {
+            $("#update1").show();
+            $("#save1").hide();
+            $("#author_FirstName").val("")
+            $("#author_LastName").val("")
+            $("#author_Phone").val("")
+            $("#author_nationality_id").val("")
+            $("#author_Id").val("")
+        }
+    }
+        
+
+</script>

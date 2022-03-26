@@ -1,0 +1,129 @@
+﻿
+
+@model VMCategory
+@using Newtonsoft.Json;
+
+<h1>Category Section</h1>
+<div class="row Boxmargin">
+    <div class="col-sm-12">
+        <input id="new-cat" type="button" class="btn btn-primary" value="new category" onclick="hide(id);"
+               data-target="#categorymodel" data-toggle="modal" />
+
+    </div>
+</div>
+
+<div class="modal fade" id="categorymodel" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Category</h4>
+
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Category Name</label>
+                        <input type="text" class="form-control" asp-for="category.Name" placeholder="Enter Category Name" />
+                        <span asp-validation-for="category.Name"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Category Code</label>
+                        <input type="text" class="form-control" asp-for="category.CategoryCode" placeholder="Enter Category Code" />
+                        <span asp-validation-for="category.CategoryCode"></span>
+                    </div>
+
+
+                    <input type="hidden" asp-for="category.Id" />
+
+                </div>
+                <div class="modal-footer">
+                    <input id="update" type="submit" value="Update" asp-action="updatecategory" class="btn btn-primary">
+                    <input id="save" type="submit" value="Save" asp-action="addcategory" class="btn btn-primary">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="close">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:20px">
+    <div class="col-sm-12">
+        <table class="table table-bordered">
+            <thead>
+            <th>#</th>
+            <th>Category Name</th>
+            <th>Category Code</th>
+            <th>Action</th>
+            </th>
+            <tbody>
+                @foreach (var item in Model.licategory)
+                {
+                    <tr>
+                        <td class="categoryid">@item.Id</td>
+                        <td>@item.Name</td>
+                        <td>@item.CategoryCode</td>
+                        <td>
+
+                            <a  class="glyphicon glyphicon-edit edit1" style="text-decoration:none" id="pop" onclick="hide(id)">
+                                &nbsp
+                            </a>
+                          
+                            <a class="glyphicon glyphicon-trash" style="color:red;text-decoration:none" asp-action="delete" asp-route-ID="@item.Id">&nbsp</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".edit1").click(function () {
+            debugger;
+            var cat_id = $(this).parent().parent().find(".categoryid").text()
+            $.ajax({
+                type: 'get',
+                url: '/bookstore/Category/edit?id=' + cat_id,
+                success: function (data) {
+                    debugger;
+                    $("#category_Name").val(data.name)
+                    $("#category_CategoryCode").val(data.categoryCode)
+                    $("#category_Id").val(data.id)
+                    alert("done");
+                },
+                error: function () {
+                    alert("error")
+                }
+            })
+            $("#categorymodel").modal('show')
+        });
+    });
+
+
+    function hide(id) {
+        debugger
+        if (id == "pop") {
+            $("#save").hide();
+            $("#update").show();
+        }
+        else if (id == "new-cat") {
+            $("#update").hide();
+            $("#save").show();
+            $("#category_Name").val("");
+            $("#category_CategoryCode").val("");
+            $("#category_Id").val("");
+        }                                                                                                                
+                                                                                                                              
+    }
+
+</script>
+
+
+
+
+
